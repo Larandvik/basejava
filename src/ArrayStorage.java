@@ -14,7 +14,7 @@ public class ArrayStorage {
     Resume get(String uuid) {
         Resume result;
         for (Resume resume : storage) {
-            if (resume.equals(uuid)) {
+            if (resume.toString().equals(uuid)) {
                 result = resume;
                 return result;
             }
