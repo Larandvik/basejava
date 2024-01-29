@@ -25,6 +25,13 @@ public class ArrayStorage {
     }
 
     int size() {
-        return 0;
+        int size = 0;
+        for (int i = 0; i < storage.length; i++) {
+            if (storage[i] == null) {
+                break;
+            }
+            size++;
+        }
+        return size;
     }
 }
