@@ -5,6 +5,9 @@ public class ArrayStorage {
     Resume[] storage = new Resume[10000];
 
     void clear() {
+        for (int i = 0; i < size(); i++) {
+            storage[i] = null;
+        }
     }
 
     void save(Resume r) {
@@ -13,12 +16,17 @@ public class ArrayStorage {
 
     Resume get(String uuid) {
         Resume result;
-        for (Resume resume : storage) {
-            if (resume.toString().equals(uuid)) {
-                result = resume;
-                return result;
+        try {
+            for (Resume resume : storage) {
+                if (resume.toString().equals(uuid)) {
+                    result = resume;
+                    return result;
+                }
             }
+        } catch (NullPointerException e) {
+            System.out.println("Такого резюме нет или база пуста");
         }
+
         return null;
     }
 
