@@ -8,14 +8,14 @@ public class ArrayStorage {
     private int counterResume;
 
     void clear() {
-        for (int i = 0; i < counterResume; i++) {
+        for (int i = 0; i < size(); i++) {
             storage[i] = null;
         }
         counterResume = 0;
     }
 
     void save(Resume r) {
-        storage[counterResume] = r;
+        storage[size()] = r;
         counterResume++;
     }
 
@@ -35,11 +35,11 @@ public class ArrayStorage {
     }
 
     void delete(String uuid) {
-        for (int i = 0; i < counterResume; i++) {
+        for (int i = 0; i < size(); i++) {
             try {
                 if (storage[i].toString().equals(uuid)) {
                     storage[i] = null;
-                    for (int j = i; j < counterResume; j++) {
+                    for (int j = i; j < size(); j++) {
                         storage[j] = storage[j + 1];
                     }
                     counterResume--;
@@ -54,7 +54,7 @@ public class ArrayStorage {
      * @return array, contains only Resumes in storage (without null)
      */
     Resume[] getAll() {
-        return Arrays.copyOf(storage, counterResume);
+        return Arrays.copyOf(storage, size());
     }
 
     int size() {
