@@ -20,32 +20,22 @@ public class ArrayStorage {
     }
 
     Resume get(String uuid) {
-        Resume result;
-        try {
-            for (Resume resume : storage) {
-                if (resume.toString().equals(uuid)) {
-                    result = resume;
-                    return result;
-                }
+        for (Resume resume : storage) {
+            if (resume != null && resume.toString().equals(uuid)) {
+                return resume;
             }
-        } catch (NullPointerException e) {
-            System.out.println("Такого резюме нет");
         }
         return null;
     }
 
     void delete(String uuid) {
         for (int i = 0; i < size(); i++) {
-            try {
-                if (storage[i].toString().equals(uuid)) {
-                    storage[i] = null;
-                    for (int j = i; j < size(); j++) {
-                        storage[j] = storage[j + 1];
-                    }
-                    counterResume--;
+            if (storage[i] != null && storage[i].toString().equals(uuid)) {
+                storage[i] = null;
+                for (int j = i; j < size(); j++) {
+                    storage[j] = storage[j + 1];
                 }
-            } catch (NullPointerException e) {
-                System.out.println("Такого резюме нет");
+                counterResume--;
             }
         }
     }
