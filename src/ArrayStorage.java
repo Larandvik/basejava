@@ -32,6 +32,7 @@ public class ArrayStorage {
         for (int i = 0; i < countResumes; i++) {
             if (storage[i].toString().equals(uuid)) {
                 storage[i] = storage[--countResumes];
+                storage[countResumes] = null;
                 break;
             }
         }
