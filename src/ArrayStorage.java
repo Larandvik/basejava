@@ -30,12 +30,9 @@ public class ArrayStorage {
 
     void delete(String uuid) {
         for (int i = 0; i < countResumes; i++) {
-            if (storage[i] != null && storage[i].toString().equals(uuid)) {
-                storage[i] = null;
-                for (int j = i; j < countResumes; j++) {
-                    storage[j] = storage[j + 1];
-                }
-                countResumes--;
+            if (storage[i].toString().equals(uuid)) {
+                storage[i] = storage[--countResumes];
+                break;
             }
         }
     }
