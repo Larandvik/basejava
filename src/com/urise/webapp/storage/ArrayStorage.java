@@ -21,6 +21,15 @@ public class ArrayStorage {
         countResumes++;
     }
 
+    public void update(Resume resume) {
+        for (int i = 0; i < countResumes; i++) {
+            if (storage[i].getUuid().equals(resume.getUuid())) {
+                storage[i] = resume;
+                break;
+            }
+        }
+    }
+
     public Resume get(String uuid) {
         for (int i = 0; i < countResumes; i++) {
             if (storage[i].getUuid().equals(uuid)) {
