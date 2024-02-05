@@ -11,7 +11,6 @@ public class ArrayStorage {
     private final Resume[] storage = new Resume[10000];
     private int countResumes;
     private static final int STORAGE_LIMIT = 10000;
-    private int indexResume;
 
     public void clear() {
         Arrays.fill(storage, 0, countResumes, null);
@@ -23,32 +22,40 @@ public class ArrayStorage {
             System.out.println("база переполнена");
             return;
         }
-        if (isNotExists(resume.getUuid())) {
-            storage[countResumes] = resume;
-            countResumes++;
+        int index = getIndex(resume.getUuid());
+        if (isExist(index)) {
+            System.out.println("резюме с номер " + resume.getUuid() + " уже существует");
             return;
         }
-        System.out.println("резюме с номер " + resume.getUuid() + " уже существует");
+        storage[countResumes] = resume;
+        countResumes++;
     }
 
     public void update(Resume resume) {
-        if (isExists(resume.getUuid())) {
-            storage[indexResume] = resume;
+        int index = getIndex(resume.getUuid());
+        if (isExist(index)) {
+            storage[index] = resume;
         }
+        printIsNotExist(resume.getUuid());
     }
 
     public Resume get(String uuid) {
-        if (isExists(uuid)) {
-            return storage[indexResume];
+        int index = getIndex(uuid);
+        if (isExist(index)) {
+            return storage[index];
         }
+        printIsNotExist(uuid);
         return null;
     }
 
     public void delete(String uuid) {
-        if (isExists(uuid)) {
-            storage[indexResume] = storage[--countResumes];
+        int index = getIndex(uuid);
+        if (isExist(index)) {
+            storage[index] = storage[--countResumes];
             storage[countResumes] = null;
+            return;
         }
+        printIsNotExist(uuid);
     }
 
     /**
@@ -62,23 +69,20 @@ public class ArrayStorage {
         return countResumes;
     }
 
-    private boolean isExists(String uuid) {
-        for (int i = 0; i < countResumes; i++) {
-            if (storage[i].getUuid().equals(uuid)) {
-                indexResume = i;
-                return true;
-            }
-        }
-        System.out.println("ERROR, резюме с номером " + uuid + " отсутствует");
-        return false;
+    private boolean isExist(int index) {
+        return index != -1;
     }
 
-    private boolean isNotExists(String uuid) {
+    private int getIndex(String uuid) {
         for (int i = 0; i < countResumes; i++) {
             if (storage[i].getUuid().equals(uuid)) {
-                return false;
+                return i;
             }
         }
-        return true;
+        return -1;
+    }
+
+    private void printIsNotExist(String uuid) {
+        System.out.println("резюме с номером " + uuid + " не существует");
     }
 }
