@@ -10,6 +10,7 @@ import java.util.Arrays;
 public class ArrayStorage {
     private final Resume[] storage = new Resume[10000];
     private int countResumes;
+    private static final int STORAGE_LIMIT = 10000;
     private int indexResume;
 
     public void clear() {
@@ -18,7 +19,7 @@ public class ArrayStorage {
     }
 
     public void save(Resume resume) {
-        if (countResumes == storage.length) {
+        if (countResumes == STORAGE_LIMIT) {
             System.out.println("база переполнена");
             return;
         }
