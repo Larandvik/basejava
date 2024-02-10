@@ -7,12 +7,13 @@ import ru.javawebinar.basejava.model.Resume;
  */
 public class ArrayStorage extends AbstractArrayStorage {
 
+    @Override
     public void save(Resume resume) {
+        int index = getIndex(resume.getUuid());
         if (size == STORAGE_LIMIT) {
             System.out.println("база переполнена");
             return;
         }
-        int index = getIndex(resume.getUuid());
         if (index != -1) {
             System.out.println("резюме с номер " + resume.getUuid() + " уже существует");
             return;
@@ -21,24 +22,18 @@ public class ArrayStorage extends AbstractArrayStorage {
         size++;
     }
 
-//    public void update(Resume resume) {
-//        int index = getIndex(resume.getUuid());
-//        if (isExist(index)) {
-//            storage[index] = resume;
-//        }
-//        printIsNotExist(resume.getUuid());
-//    }
-
+    @Override
     public void delete(String uuid) {
         int index = getIndex(uuid);
-        if (index != -1) {
-            storage[index] = storage[--size];
-            storage[size] = null;
+        if (index == -1) {
+            printIsNotExist(uuid);
             return;
         }
-        printIsNotExist(uuid);
+        storage[index] = storage[--size];
+        storage[size] = null;
     }
 
+    @Override
     protected int getIndex(String uuid) {
         for (int i = 0; i < size; i++) {
             if (storage[i].getUuid().equals(uuid)) {
