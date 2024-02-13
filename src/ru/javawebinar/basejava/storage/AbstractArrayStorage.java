@@ -23,7 +23,8 @@ public abstract class AbstractArrayStorage implements Storage {
             System.out.println("резюме с номер " + resume.getUuid() + " уже существует");
             return;
         }
-        saveAndShift(resume, index);
+        saveResume(resume, index);
+        size++;
     }
 
     public void clear() {
@@ -46,7 +47,9 @@ public abstract class AbstractArrayStorage implements Storage {
             printIsNotExist(uuid);
             return;
         }
-        deleteAndShift(index);
+        deleteResume(index);
+        size--;
+        storage[size] = null;
     }
 
     @Override
@@ -67,11 +70,11 @@ public abstract class AbstractArrayStorage implements Storage {
         return Arrays.copyOf(storage, size);
     }
 
-    protected abstract void saveAndShift(Resume resume, int index);
+    protected abstract void saveResume(Resume resume, int index);
 
     protected abstract int getIndex(String uuid);
 
-    protected abstract void deleteAndShift(int index);
+    protected abstract void deleteResume(int index);
 
     protected void printIsNotExist(String uuid) {
         System.out.println("резюме с номером " + uuid + " не существует");
