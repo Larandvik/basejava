@@ -8,27 +8,13 @@ import ru.javawebinar.basejava.model.Resume;
 public class ArrayStorage extends AbstractArrayStorage {
 
     @Override
-    public void save(Resume resume) {
-        int index = getIndex(resume.getUuid());
-        if (size == STORAGE_LIMIT) {
-            System.out.println("база переполнена");
-            return;
-        }
-        if (index != -1) {
-            System.out.println("резюме с номер " + resume.getUuid() + " уже существует");
-            return;
-        }
+    protected void saveAndShift(Resume resume, int index) {
         storage[size] = resume;
         size++;
     }
 
     @Override
-    public void delete(String uuid) {
-        int index = getIndex(uuid);
-        if (index == -1) {
-            printIsNotExist(uuid);
-            return;
-        }
+    protected void deleteAndShift(int index) {
         storage[index] = storage[--size];
         storage[size] = null;
     }
