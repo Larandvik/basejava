@@ -17,10 +17,10 @@ public class SortedArrayStorage extends AbstractArrayStorage {
 
     @Override
     protected void deleteResume(int index) {
-        if (index == STORAGE_LIMIT - 1) {
-            storage[index] = null;
-            return;
-        }
+//        if (index == STORAGE_LIMIT - 1) {
+//            storage[index] = null;
+//            return;
+//        }
         System.arraycopy(storage, index + 1, storage, index, size - index);
     }
 
