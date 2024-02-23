@@ -34,26 +34,39 @@ public abstract class AbstractArrayStorageTest {
 
     @Test
     void save() {
+        storage.save(new Resume());
+        assertEquals(4, storage.size());
     }
 
     @Test
     void clear() {
+        storage.clear();
+        assertEquals(0, storage.size());
     }
 
     @Test
     void get() {
+        Resume resume = new Resume(UUID_1);
+        assertEquals(resume, storage.get(UUID_1));
     }
 
     @Test
     void delete() {
+        storage.delete(UUID_1);
+        assertEquals(2, storage.size());
     }
 
     @Test
     void update() {
+        Resume expected = new Resume(UUID_1);
+        storage.update(expected);
+        assertEquals(expected, storage.get(UUID_1));
     }
 
     @Test
     void getAll() {
+        Resume[] expected = {new Resume(UUID_1), new Resume(UUID_2), new Resume(UUID_3)};
+        assertArrayEquals(expected, storage.getAll());
     }
 
     @Test
