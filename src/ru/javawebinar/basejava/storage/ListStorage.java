@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class ListStorage extends AbstractStorage {
 
-    public ArrayList<Resume> listStorage = new ArrayList<>();
+    protected ArrayList<Resume> listStorage = new ArrayList<>();
 
     @Override
     public void clear() {
@@ -66,6 +66,7 @@ public class ListStorage extends AbstractStorage {
         listStorage.add(resume);
     }
 
+    @Override
     protected int getIndex(String uuid) {
         return listStorage.indexOf(new Resume(uuid));
     }
