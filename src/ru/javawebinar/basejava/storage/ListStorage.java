@@ -30,7 +30,7 @@ public class ListStorage extends AbstractStorage {
         if (index >= 0) {
             throw new ExistStorageException(resume.getUuid());
         }
-        listStorage.add(resume);
+        saveResume(resume, index);
     }
 
     @Override
@@ -48,7 +48,7 @@ public class ListStorage extends AbstractStorage {
         if (index < 0) {
             throw new NotExistStorageException(uuid);
         }
-        listStorage.remove(index);
+        deleteResume(index);
     }
 
     @Override
@@ -63,7 +63,7 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     protected void saveResume(Resume resume, int index) {
-
+        listStorage.add(resume);
     }
 
     protected int getIndex(String uuid) {
@@ -72,6 +72,6 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     protected void deleteResume(int index) {
-
+        listStorage.remove(index);
     }
 }
