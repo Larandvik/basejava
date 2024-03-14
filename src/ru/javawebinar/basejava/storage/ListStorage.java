@@ -29,15 +29,6 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    public void delete(String uuid) {
-        int index = getIndex(uuid);
-        if (index < 0) {
-            throw new NotExistStorageException(uuid);
-        }
-        deleteResume(index);
-    }
-
-    @Override
     public void update(Resume resume) {
         int index = getIndex(resume.getUuid());
         if (index < 0) {

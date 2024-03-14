@@ -15,9 +15,8 @@ public class SortedArrayStorage extends AbstractArrayStorage {
         storage[index] = resume;
     }
 
-
     @Override
-    protected void deleteResume(int index) {
+    protected void deleteResumeArray(int index) {
         if (index == STORAGE_LIMIT - 1) {
             storage[index] = null;
             return;

@@ -32,22 +32,21 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
 
     protected abstract void saveResumeArray(Resume resume, int index);
 
+    @Override
+    protected void deleteResume(int index) {
+        deleteResumeArray(index);
+        size--;
+        storage[size] = null;
+    }
+
+    protected abstract void deleteResumeArray(int index);
+
     public final Resume get(String uuid) {
         int index = getIndex(uuid);
         if (index < 0) {
             throw new NotExistStorageException(uuid);
         }
         return storage[index];
-    }
-
-    public final void delete(String uuid) {
-        int index = getIndex(uuid);
-        if (index < 0) {
-            throw new NotExistStorageException(uuid);
-        }
-        deleteResume(index);
-        size--;
-        storage[size] = null;
     }
 
     @Override
