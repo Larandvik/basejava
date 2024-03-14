@@ -11,26 +11,17 @@ public class ListStorage extends AbstractStorage {
     protected ArrayList<Resume> listStorage = new ArrayList<>();
 
     @Override
-    public void clear() {
-        listStorage.clear();
-    }
-
-    @Override
-    public void update(Resume resume) {
-        int index = getIndex(resume.getUuid());
-        if (index < 0) {
-            throw new NotExistStorageException(resume.getUuid());
-        }
-        listStorage.set(index, resume);
-    }
-
-    @Override
     public void save(Resume resume) {
         int index = getIndex(resume.getUuid());
         if (index >= 0) {
             throw new ExistStorageException(resume.getUuid());
         }
         saveResume(resume, index);
+    }
+
+    @Override
+    public void clear() {
+        listStorage.clear();
     }
 
     @Override
@@ -49,6 +40,15 @@ public class ListStorage extends AbstractStorage {
             throw new NotExistStorageException(uuid);
         }
         deleteResume(index);
+    }
+
+    @Override
+    public void update(Resume resume) {
+        int index = getIndex(resume.getUuid());
+        if (index < 0) {
+            throw new NotExistStorageException(resume.getUuid());
+        }
+        listStorage.set(index, resume);
     }
 
     @Override
