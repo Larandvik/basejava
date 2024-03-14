@@ -6,8 +6,6 @@ import ru.javawebinar.basejava.model.Resume;
 
 public abstract class AbstractStorage implements Storage {
 
-
-
     public final void save(Resume resume) {
         int index = getIndex(resume.getUuid());
         if (index >= 0) {
@@ -33,8 +31,6 @@ public abstract class AbstractStorage implements Storage {
         return getResume(index);
     }
 
-    protected abstract Resume getResume(int index);
-
     @Override
     public final void update(Resume resume) {
         int index = getIndex(resume.getUuid());
@@ -43,6 +39,8 @@ public abstract class AbstractStorage implements Storage {
         }
         updateResume(resume, index);
     }
+
+    protected abstract Resume getResume(int index);
 
     protected abstract void updateResume(Resume resume, int index);
 

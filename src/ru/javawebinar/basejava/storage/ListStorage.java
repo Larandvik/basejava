@@ -9,13 +9,18 @@ public class ListStorage extends AbstractStorage {
     protected ArrayList<Resume> listStorage = new ArrayList<>();
 
     @Override
+    public void clear() {
+        listStorage.clear();
+    }
+
+    @Override
     protected void saveResume(Resume resume, int index) {
         listStorage.add(resume);
     }
 
     @Override
-    public void clear() {
-        listStorage.clear();
+    protected void deleteResume(int index) {
+        listStorage.remove(index);
     }
 
     @Override
@@ -41,10 +46,5 @@ public class ListStorage extends AbstractStorage {
     @Override
     protected int getIndex(String uuid) {
         return listStorage.indexOf(new Resume(uuid));
-    }
-
-    @Override
-    protected void deleteResume(int index) {
-        listStorage.remove(index);
     }
 }
