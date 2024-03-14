@@ -10,6 +10,11 @@ public class ListStorage extends AbstractStorage {
     protected ArrayList<Resume> listStorage = new ArrayList<>();
 
     @Override
+    protected void saveResume(Resume resume, int index) {
+        listStorage.add(resume);
+    }
+
+    @Override
     public void clear() {
         listStorage.clear();
     }
@@ -49,11 +54,6 @@ public class ListStorage extends AbstractStorage {
     @Override
     public int size() {
         return listStorage.size();
-    }
-
-    @Override
-    protected void saveResume(Resume resume, int index) {
-        listStorage.add(resume);
     }
 
     @Override
