@@ -29,11 +29,7 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    public void update(Resume resume) {
-        int index = getIndex(resume.getUuid());
-        if (index < 0) {
-            throw new NotExistStorageException(resume.getUuid());
-        }
+    protected void updateResume(Resume resume, int index) {
         listStorage.set(index, resume);
     }
 

@@ -30,16 +30,12 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         size++;
     }
 
-    protected abstract void saveResumeArray(Resume resume, int index);
-
     @Override
-    protected void deleteResume(int index) {
+    protected final void deleteResume(int index) {
         deleteResumeArray(index);
         size--;
         storage[size] = null;
     }
-
-    protected abstract void deleteResumeArray(int index);
 
     public final Resume get(String uuid) {
         int index = getIndex(uuid);
@@ -50,11 +46,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    public final void update(Resume resume) {
-        int index = getIndex(resume.getUuid());
-        if (index < 0) {
-            throw new NotExistStorageException(resume.getUuid());
-        }
+    public final void updateResume(Resume resume, int index) {
         storage[index] = resume;
     }
 
@@ -64,4 +56,8 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     public Resume[] getAll() {
         return Arrays.copyOf(storage, size);
     }
+
+    protected abstract void saveResumeArray(Resume resume, int index);
+
+    protected abstract void deleteResumeArray(int index);
 }
