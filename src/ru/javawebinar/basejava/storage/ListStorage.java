@@ -25,16 +25,6 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected boolean isExist(Object searchKey) {
-        for (Resume resume : storage) {
-            if (resume.getUuid().equals(searchKey)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Override
     protected Resume getResume(Object searchKey) {
         return storage.get((Integer) searchKey);
     }
@@ -62,5 +52,15 @@ public class ListStorage extends AbstractStorage {
             }
         }
         return -1;
+    }
+
+    @Override
+    protected boolean isExist(Object searchKey) {
+        for (Resume resume : storage) {
+            if (resume.getUuid().equals(searchKey)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
