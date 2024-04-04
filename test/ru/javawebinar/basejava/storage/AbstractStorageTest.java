@@ -22,10 +22,15 @@ public abstract class AbstractStorageTest {
     private static final String UUID_4 = "uuid_4";
     private static final String UUID_NOT_EXIST = "uuid not exist";
 
-    private static final Resume RESUME_1 = new Resume(UUID_1);
-    private static final Resume RESUME_2 = new Resume(UUID_2);
-    private static final Resume RESUME_3 = new Resume(UUID_3);
-    private static final Resume RESUME_4 = new Resume(UUID_4);
+    private static final String NAME_1 = "Andrey Larionov";
+    private static final String NAME_2 = "Andrey Ivanov";
+    private static final String NAME_3 = "Petr Petrov";
+    private static final String NAME_4 = "Petr Petrov";
+
+    private static final Resume RESUME_1 = new Resume(UUID_1, NAME_1);
+    private static final Resume RESUME_2 = new Resume(UUID_2, NAME_2);
+    private static final Resume RESUME_3 = new Resume(UUID_3, NAME_3);
+    private static final Resume RESUME_4 = new Resume(UUID_4, NAME_4);
     private static final Resume RESUME_NOT_EXIST = new Resume(UUID_NOT_EXIST);
 
     @BeforeEach
@@ -52,7 +57,7 @@ public abstract class AbstractStorageTest {
 
     @Test
     void saveExisting() {
-        assertThrows(ExistStorageException.class, () -> storage.save(new Resume(UUID_1)));
+        assertThrows(ExistStorageException.class, () -> storage.save(new Resume(UUID_1, NAME_1)));
     }
 
     @Test
@@ -93,7 +98,7 @@ public abstract class AbstractStorageTest {
 
     @Test
     void getAll() {
-        Resume[] expected = {new Resume(UUID_1), new Resume(UUID_2), new Resume(UUID_3)};
+        Resume[] expected = {new Resume(UUID_1, NAME_1), new Resume(UUID_2, NAME_2), new Resume(UUID_3, NAME_3)};
         assertArrayEquals(expected, storage.getAll());
     }
 
