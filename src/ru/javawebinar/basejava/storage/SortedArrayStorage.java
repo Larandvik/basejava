@@ -43,30 +43,4 @@ public class SortedArrayStorage extends AbstractArrayStorage {
         Resume searchKey = new Resume(uuid, "fullName");
         return Arrays.binarySearch(storage, 0, size, searchKey, RESUME_COMPARATOR);
     }
-
-    @Override
-    protected boolean isExist(Object searchKey) {
-        if (size == 0) {
-            return false;
-        }
-        int left = 0;
-        int right = size - 1;
-        while (left <= right) {
-            int middle = (left + right) / 2;
-            String current = storage[middle].getUuid();
-            if (current != null) {
-                int compareResult = current.compareTo((String) searchKey);
-                if (compareResult == 0) {
-                    return true;
-                } else if (compareResult < 0) {
-                    left = middle + 1;
-                } else {
-                    right = middle - 1;
-                }
-            } else {
-                left = middle + 1;
-            }
-        }
-        return false;
-    }
 }

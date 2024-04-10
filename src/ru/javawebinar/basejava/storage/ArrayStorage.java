@@ -14,7 +14,7 @@ public class ArrayStorage extends AbstractArrayStorage {
 
     @Override
     protected void deleteResumeArray(Object index) {
-        storage[(int) index] = storage[size - 1];
+        storage[(Integer) index] = storage[size - 1];
     }
 
     @Override
@@ -25,11 +25,5 @@ public class ArrayStorage extends AbstractArrayStorage {
             }
         }
         return -1;
-    }
-
-    @Override
-    protected boolean isExist(Object searchKey) {
-        int key = (int) getSearchKey((String) searchKey);
-        return key >= 0;
     }
 }
