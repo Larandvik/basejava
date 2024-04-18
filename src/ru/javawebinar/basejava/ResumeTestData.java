@@ -5,13 +5,13 @@ import ru.javawebinar.basejava.model.*;
 public class ResumeTestData {
     public static void main(String[] args) {
         Resume resumeTest = new Resume("Григорий Кислин");
-        resumeTest.addPhone("+7(921) 855-0482");
-        resumeTest.addSkype("skype:grigory.kislin");
-        resumeTest.addEmail("gkislin@yandex.ru");
-        resumeTest.addLinkedIn("https://www.linkedin.com/in/gkislin/");
-        resumeTest.addGitHub("https://github.com/gkislin");
-        resumeTest.addStackOverFlow("https://stackoverflow.com/users/548473/grigory-kislin");
-        resumeTest.addHomePage("http://gkislin.ru/");
+        resumeTest.addContact(ContactType.PHONE, "+7(921) 855-0482");
+        resumeTest.addContact(ContactType.SKYPE, "skype:grigory.kislin");
+        resumeTest.addContact(ContactType.EMAIL, "gkislin@yandex.ru");
+        resumeTest.addContact(ContactType.LINKEDIN, "https://www.linkedin.com/in/gkislin/");
+        resumeTest.addContact(ContactType.GITHUB, "https://github.com/gkislin");
+        resumeTest.addContact(ContactType.STACKOVERFLOW, "https://stackoverflow.com/users/548473/grigory-kislin");
+        resumeTest.addContact(ContactType.HOMEPAGE, "http://gkislin.ru/");
 
         resumeTest.addSection(SectionType.OBJECTIVE, new TextSection("Ведущий стажировок и корпоративного обучения " +
                 "по Java Web и Enterprise технологиям"));
@@ -54,9 +54,8 @@ public class ResumeTestData {
                 """, """
                 Реализация протоколов по приему платежей всех основных
                 платежных системы России (Cyberplat, Eport, Chronopay, Сбербанк),
-                Белоруcсии(Erip, Osmp) и Никарагуа.
-                """
-                ));
+                Белоруcсии(Erip, Osmp) и Никарагуа."""
+        ));
         resumeTest.addSection(SectionType.QUALIFICATIONS, new ListSection(
                 "JEE AS: GlassFish (v2.1, v3), OC4J, JBoss, Tomcat, Jetty, WebLogic, WSO2",
                 "Version control: Subversion, Git, Mercury, ClearCase, Perforce",
@@ -67,19 +66,17 @@ public class ResumeTestData {
                 Java Frameworks: Java 8 (Time API, Streams), Guava, Java Executor,
                 MyBatis, Spring (MVC, Security, Data, Clouds, Boot), JPA (Hibernate,
                 EclipseLink), Guice, GWT(SmartGWT, ExtGWT/GXT), Vaadin, Jasperreports,
-                Apache Commons, Eclipse SWT, JUnit, Selenium (htmlelements).
-                """,
+                Apache Commons, Eclipse SWT, JUnit, Selenium (htmlelements).""",
                 "Python: Django.",
                 "JavaScript: jQuery, ExtJS, Bootstrap.js, underscore.js",
                 "Scala: SBT, Play2, Specs2, Anorm, Spray, Akka", """
                 Технологии: Servlet, JSP/JSTL, JAX-WS, REST, EJB, RMI, JMS, JavaMail, JAXB,
                 StAX, SAX, DOM, XSLT, MDB, JMX, JDBC, JPA, JNDI, JAAS, SOAP, AJAX,
-                Commet, HTML5, ESB, CMIS, BPMN2, LDAP, OAuth1, OAuth2, JWT.
-                """,
+                Commet, HTML5, ESB, CMIS, BPMN2, LDAP, OAuth1, OAuth2, JWT.""",
                 "Инструменты: Maven + plugin development, Gradle, настройка Ngnix", """
                 администрирование Hudson/Jenkins, Ant + custom task, SoapUI,
-                JPublisher, Flyway, Nagios, iReport, OpenCmis, Bonita, pgBouncer
-                """, """
+                JPublisher, Flyway, Nagios, iReport, OpenCmis, Bonita, pgBouncer""",
+                """ 
                 Отличное знание и опыт применения концепций ООП, SOA,
                 шаблонов проектрирования, архитектурных шаблонов, UML,
                 функционального программирования
@@ -87,13 +84,22 @@ public class ResumeTestData {
                 "Родной русский, английский \"upper intermediate\""
         ));
 
-        Period period = new Period("10/2020", "01/2021", "Автор проекта",
-                "Создание, организация и проведение Java онлайн проектов и стажировок.");
-        resumeTest.addSection(SectionType.EXPERIENCE, new CompanySection("Alcatel",
-                "http://www.alcatel.ru/", "09/1997", "01/2005",
+        Period periodAlcatel = new Period("09/1997", "01/2005",
                 "Инженер по аппаратному и программному тестированию",
-                "Тестирование, отладка, внедрение ПО цифровой телефонной станции Alcatel " +
-                        "1000 S12 (CHILL, ASM)."));
+                "Тестирование, отладка, внедрение ПО цифровой телефонной станции " +
+                        "Alcatel 1000 S12 (CHILL, ASM).");
+
+        Company Alcatel = new Company("Alcatel", "http://www.alcatel.ru/", periodAlcatel);
+        CompanySection experience = new CompanySection();
+        experience.addCompanies(Alcatel);
+        resumeTest.addSection(SectionType.EXPERIENCE, experience);
+
+        Period periodMfti = new Period("09/1984", "06/1987", "Закончил с отличием");
+        Company mfti = new Company("Заочная физико-техническая школа при МФТИ", "https://mipt.ru/",
+                periodMfti);
+        CompanySection education = new CompanySection();
+        education.addCompanies(mfti);
+        resumeTest.addSection(SectionType.EDUCATION, education);
 
         printInfo(resumeTest);
     }
@@ -107,10 +113,11 @@ public class ResumeTestData {
         System.out.println(resumeTest.getContact(ContactType.GITHUB));
         System.out.println(resumeTest.getContact(ContactType.STACKOVERFLOW));
         System.out.println(resumeTest.getContact(ContactType.HOMEPAGE));
-        System.out.println(SectionType.OBJECTIVE + " : \n" + resumeTest.getSections(SectionType.OBJECTIVE));
-        System.out.println(SectionType.PERSONAL + " : \n" + resumeTest.getSections(SectionType.PERSONAL));
-        System.out.println(SectionType.ACHIEVEMENT + " : \n" + resumeTest.getSections(SectionType.ACHIEVEMENT));
-        System.out.println(SectionType.QUALIFICATIONS + " : \n" + resumeTest.getSections(SectionType.QUALIFICATIONS));
-        System.out.println(SectionType.EXPERIENCE + " : \n" + resumeTest.getSections(SectionType.EXPERIENCE));
+        System.out.println(SectionType.OBJECTIVE + ": \n" + resumeTest.getSections(SectionType.OBJECTIVE));
+        System.out.println(SectionType.PERSONAL + ": \n" + resumeTest.getSections(SectionType.PERSONAL));
+        System.out.println(SectionType.ACHIEVEMENT + ": \n" + resumeTest.getSections(SectionType.ACHIEVEMENT));
+        System.out.println(SectionType.QUALIFICATIONS + ": \n" + resumeTest.getSections(SectionType.QUALIFICATIONS));
+        System.out.println(SectionType.EXPERIENCE + ": \n" + resumeTest.getSections(SectionType.EXPERIENCE));
+        System.out.println(SectionType.EDUCATION + ": \n" + resumeTest.getSections(SectionType.EDUCATION));
     }
 }
