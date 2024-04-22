@@ -1,4 +1,4 @@
-package ru.javawebinar.basejava;
+package ru.javawebinar.basejava.util;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
