@@ -10,6 +10,7 @@ public class Company {
     private final List<Period> periods = new ArrayList<>();
 
     public Company(String name, String website, Period period) {
+        Objects.requireNonNull(name, "name must not be null");
         this.name = name;
         this.website = website;
         periods.add(period);

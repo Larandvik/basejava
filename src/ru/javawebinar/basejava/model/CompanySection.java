@@ -12,6 +12,7 @@ public class CompanySection extends AbstractSection {
     }
 
     public void setCompanies(List<Company> companies) {
+        Objects.requireNonNull(companies, "companies must not be null");
         this.companies = companies;
     }
 
