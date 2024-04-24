@@ -28,6 +28,10 @@ public class Company {
         return periods;
     }
 
+    public void addPeriod(Period period) {
+        periods.add(period);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

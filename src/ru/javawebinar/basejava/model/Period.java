@@ -63,8 +63,12 @@ public class Period {
 
     @Override
     public String toString() {
-        return startDate + " - " + endDate + "\n" +
-                title + "\n" +
-                description + "\n";
+        StringBuilder sb = new StringBuilder();
+        sb.append(startDate).append(" - ").append(endDate).append("\n");
+        sb.append(title).append("\n");
+        if (description != null) {
+            sb.append(description);
+        }
+        return sb.toString();
     }
 }

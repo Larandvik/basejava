@@ -3,8 +3,10 @@ package ru.javawebinar.basejava;
 import ru.javawebinar.basejava.model.*;
 
 public class ResumeTestData {
-    public static void main(String[] args) {
-        Resume resumeTest = new Resume("Григорий Кислин");
+    private static final Resume resumeTest = new Resume("Григорий Кислин");
+
+    public static Resume getResumeTest(String uuid, String fullName) {
+        Resume resumeTest =  new Resume(uuid, fullName);
         resumeTest.addContact(ContactType.PHONE, "+7(921) 855-0482");
         resumeTest.addContact(ContactType.SKYPE, "skype:grigory.kislin");
         resumeTest.addContact(ContactType.EMAIL, "gkislin@yandex.ru");
@@ -12,7 +14,6 @@ public class ResumeTestData {
         resumeTest.addContact(ContactType.GITHUB, "https://github.com/gkislin");
         resumeTest.addContact(ContactType.STACKOVERFLOW, "https://stackoverflow.com/users/548473/grigory-kislin");
         resumeTest.addContact(ContactType.HOMEPAGE, "http://gkislin.ru/");
-
         resumeTest.addSection(SectionType.OBJECTIVE, new TextSection("Ведущий стажировок и корпоративного обучения " +
                 "по Java Web и Enterprise технологиям"));
         resumeTest.addSection(SectionType.PERSONAL, new TextSection("Аналитический склад ума, сильная логика, " +
@@ -77,13 +78,12 @@ public class ResumeTestData {
                 администрирование Hudson/Jenkins, Ant + custom task, SoapUI,
                 JPublisher, Flyway, Nagios, iReport, OpenCmis, Bonita, pgBouncer""",
                 """ 
-                Отличное знание и опыт применения концепций ООП, SOA,
-                шаблонов проектрирования, архитектурных шаблонов, UML,
-                функционального программирования
-                """,
+                        Отличное знание и опыт применения концепций ООП, SOA,
+                        шаблонов проектрирования, архитектурных шаблонов, UML,
+                        функционального программирования
+                        """,
                 "Родной русский, английский \"upper intermediate\""
         ));
-
         Period periodAlcatel = new Period("09/1997", "01/2005",
                 "Инженер по аппаратному и программному тестированию",
                 "Тестирование, отладка, внедрение ПО цифровой телефонной станции " +
@@ -94,13 +94,20 @@ public class ResumeTestData {
         experience.addCompanies(Alcatel);
         resumeTest.addSection(SectionType.EXPERIENCE, experience);
 
-        Period periodMfti = new Period("09/1984", "06/1987", "Закончил с отличием");
-        Company mfti = new Company("Заочная физико-техническая школа при МФТИ", "https://mipt.ru/",
-                periodMfti);
-        CompanySection education = new CompanySection();
-        education.addCompanies(mfti);
-        resumeTest.addSection(SectionType.EDUCATION, education);
+        Period periodItmo1 = new Period("09/1987", "07/1993", "Инженер (программист Fortran, C)");
+        Period periodItmo2 = new Period("09/1993", "07/1996", "Аспирантура (программист С, С++)");
+        Company itmo = new Company("Санкт-Петербургский национальный исследовательский университет " +
+                "информационных технологий, механики и оптики", "https://itmo.ru/",
+                periodItmo1);
+        itmo.addPeriod(periodItmo2);
 
+        CompanySection education = new CompanySection();
+        education.addCompanies(itmo);
+        resumeTest.addSection(SectionType.EDUCATION, education);
+        return resumeTest;
+    }
+
+    public static void main(String[] args) {
         printInfo(resumeTest);
     }
 
