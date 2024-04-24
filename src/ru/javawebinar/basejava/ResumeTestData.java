@@ -3,7 +3,7 @@ package ru.javawebinar.basejava;
 import ru.javawebinar.basejava.model.*;
 
 public class ResumeTestData {
-    private static final Resume resumeTest = new Resume("Григорий Кислин");
+    private static Resume resumeTest;
 
     public static Resume getResumeTest(String uuid, String fullName) {
         Resume resumeTest =  new Resume(uuid, fullName);
