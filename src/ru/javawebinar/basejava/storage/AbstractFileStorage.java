@@ -24,7 +24,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     protected Resume[] getAll() {
-        File[] resumes = directory.listFiles();
+        File[] resumes = getCheckedListFiles();
         return (Resume[]) Arrays.stream(resumes).toArray();
     }
 
@@ -67,7 +67,10 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     protected void deleteResume(File file) {
-        file.delete();
+        boolean isDelete = file.delete();
+        if (!isDelete) {
+            throw new StorageException("not deleted", file.getName());
+        }
     }
 
     @Override
@@ -77,14 +80,22 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     public void clear() {
-        File[] files = directory.listFiles();
+        File[] files = getCheckedListFiles();
         for (File file : files) {
-            file.delete();
+            deleteResume(file);
         }
     }
 
     @Override
     public int size() {
-        return Objects.requireNonNull(directory.list()).length;
+        return getCheckedListFiles().length;
+    }
+
+    private File[] getCheckedListFiles() {
+        File[] files = directory.listFiles();
+        if (files == null) {
+            throw new StorageException("IO error", directory.getName());
+        }
+        return files;
     }
 }
