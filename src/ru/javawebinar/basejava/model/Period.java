@@ -1,32 +1,34 @@
 package ru.javawebinar.basejava.model;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.time.Month;
 import java.util.Objects;
+
+import static ru.javawebinar.basejava.util.DateUtil.NOW;
+import static ru.javawebinar.basejava.util.DateUtil.of;
 
 public class Period {
     private final LocalDate startDate;
     private final LocalDate endDate;
     private final String title;
-    private String description;
+    private final String description;
 
-    public Period(String startDate, String endDate, String title, String description) {
-        Objects.requireNonNull(startDate, "start must not be null");
-        Objects.requireNonNull(endDate, "end must not be null");
-        Objects.requireNonNull(title, "title must not be null");
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        this.startDate = LocalDate.parse("01/" + startDate, formatter);
-        this.endDate = LocalDate.parse("01/" + endDate, formatter);
-        this.title = title;
-        this.description = description;
+    public Period(int startYear, Month startMonth, String title, String description) {
+        this(of(startYear, startMonth), NOW, title, description);
     }
 
-    public Period(String startDate, String endDate, String title) {
+    public Period(int startYear, Month startMonth, int endYear, Month endMonth, String title, String description) {
+        this(of(startYear, startMonth), of(endYear, endMonth), title, description);
+    }
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        this.startDate = LocalDate.parse("01/" + startDate, formatter);
-        this.endDate = LocalDate.parse("01/" + endDate, formatter);
+    public Period(LocalDate startDate, LocalDate endDate, String title, String description) {
+        Objects.requireNonNull(startDate, "startDate must not be null");
+        Objects.requireNonNull(endDate, "endDate must not be null");
+        Objects.requireNonNull(title, "title must not be null");
+        this.startDate = startDate;
+        this.endDate = endDate;
         this.title = title;
+        this.description = description;
     }
 
     public LocalDate getStartDate() {
@@ -43,10 +45,6 @@ public class Period {
 
     public String getDescription() {
         return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     @Override

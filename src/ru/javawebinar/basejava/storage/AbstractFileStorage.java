@@ -44,7 +44,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         try {
             doWrite(resume, file);
         } catch (IOException e) {
-            throw new StorageException("IO error", file.getName(), e);
+            throw new StorageException("IO error", resume.getUuid(), e);
         }
     }
 
@@ -52,10 +52,10 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     protected void saveResume(Resume resume, File file) {
         try {
             file.createNewFile();
-            doWrite(resume, file);
         } catch (IOException e) {
-            throw new StorageException("IO error", file.getName(), e);
+            throw new StorageException("Couldn't create file " + file.getAbsolutePath(), file.getName(), e);
         }
+        updateResume(resume, file);
     }
 
     protected abstract void doWrite(Resume resume, File file) throws IOException;

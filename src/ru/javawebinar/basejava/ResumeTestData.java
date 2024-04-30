@@ -2,6 +2,8 @@ package ru.javawebinar.basejava;
 
 import ru.javawebinar.basejava.model.*;
 
+import java.time.Month;
+
 public class ResumeTestData {
     private static Resume resumeTest;
 
@@ -84,7 +86,7 @@ public class ResumeTestData {
                         """,
                 "Родной русский, английский \"upper intermediate\""
         ));
-        Period periodAlcatel = new Period("09/1997", "01/2005",
+        Period periodAlcatel = new Period(2001, Month.SEPTEMBER, 2005, Month.JANUARY,
                 "Инженер по аппаратному и программному тестированию",
                 "Тестирование, отладка, внедрение ПО цифровой телефонной станции " +
                         "Alcatel 1000 S12 (CHILL, ASM).");
@@ -94,8 +96,10 @@ public class ResumeTestData {
         experience.addCompanies(Alcatel);
         resumeTest.addSection(SectionType.EXPERIENCE, experience);
 
-        Period periodItmo1 = new Period("09/1987", "07/1993", "Инженер (программист Fortran, C)");
-        Period periodItmo2 = new Period("09/1993", "07/1996", "Аспирантура (программист С, С++)");
+        Period periodItmo1 = new Period(1987, Month.SEPTEMBER,1993, Month.JUNE,
+                "Инженер (программист Fortran, C)", null);
+        Period periodItmo2 = new Period(1993, Month.SEPTEMBER, 1996, Month.JULY,
+                "Аспирантура (программист С, С++)", null);
         Company itmo = new Company("Санкт-Петербургский национальный исследовательский университет " +
                 "информационных технологий, механики и оптики", "https://itmo.ru/",
                 periodItmo1);
