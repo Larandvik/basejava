@@ -1,5 +1,7 @@
 package ru.javawebinar.basejava.model;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.Objects;
@@ -7,7 +9,9 @@ import java.util.Objects;
 import static ru.javawebinar.basejava.util.DateUtil.NOW;
 import static ru.javawebinar.basejava.util.DateUtil.of;
 
-public class Period {
+public class Period implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
     private final LocalDate startDate;
     private final LocalDate endDate;
     private final String title;

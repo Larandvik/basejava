@@ -1,11 +1,18 @@
 package ru.javawebinar.basejava.model;
 
-import java.util.*;
+import java.io.Serial;
+import java.io.Serializable;
+import java.util.EnumMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 
 /**
  * Initial resume class
  */
-public class Resume {
+public class Resume implements Comparable<Resume>, Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     // Unique identifier
     private final String uuid;
@@ -64,5 +71,11 @@ public class Resume {
     @Override
     public String toString() {
         return uuid + '(' + fullName + ')';
+    }
+
+    @Override
+    public int compareTo(Resume o) {
+        int cmp = fullName.compareTo(o.fullName);
+        return cmp != 0 ? cmp : uuid.compareTo(o.uuid);
     }
 }

@@ -15,6 +15,8 @@ public abstract class AbstractStorage<SK> implements Storage {
     protected static final Comparator<Resume> RESUME_COMPARATOR = Comparator.comparing(Resume::getFullName)
             .thenComparing(Resume::getUuid);
 
+
+
     public final void save(Resume resume) {
         LOG.info("Save " + resume);
         SK searchKey = getNotExistingSearchKey(resume.getUuid());
@@ -44,12 +46,10 @@ public abstract class AbstractStorage<SK> implements Storage {
     @Override
     public final List<Resume> getAllSorted() {
         LOG.info("getAllSorted");
-        List<Resume> resumes = new ArrayList<>(Arrays.asList(getAll()));
-        resumes.sort(RESUME_COMPARATOR);
+        List<Resume> resumes = doCopyAll();
+        Collections.sort(resumes);
         return resumes;
     }
-
-    protected abstract Resume[] getAll();
 
     protected abstract Resume getResume(SK searchKey);
 
@@ -62,6 +62,8 @@ public abstract class AbstractStorage<SK> implements Storage {
     protected abstract void deleteResume(SK searchKey);
 
     protected abstract boolean isExist(SK searchKey);
+
+    protected abstract List<Resume> doCopyAll();
 
     private SK getExistingSearchKey(String uuid) {
         SK searchKey = getSearchKey(uuid);

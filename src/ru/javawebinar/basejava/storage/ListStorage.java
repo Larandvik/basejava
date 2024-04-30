@@ -35,11 +35,6 @@ public class ListStorage extends AbstractStorage<Integer> {
     }
 
     @Override
-    public Resume[] getAll() {
-        return storage.toArray(new Resume[0]);
-    }
-
-    @Override
     public int size() {
         return storage.size();
     }
@@ -57,5 +52,10 @@ public class ListStorage extends AbstractStorage<Integer> {
     @Override
     protected boolean isExist(Integer searchKey) {
         return searchKey >= 0;
+    }
+
+    @Override
+    protected List<Resume> doCopyAll() {
+        return new ArrayList<>(storage);
     }
 }
