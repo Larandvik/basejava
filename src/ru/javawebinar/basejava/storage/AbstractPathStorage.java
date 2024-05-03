@@ -12,6 +12,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     private final Path directory;
@@ -26,15 +28,10 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
 
     @Override
     protected List<Resume> doCopyAll() {
-        if (directory == null) {
-            throw new StorageException("Directory read error", null);
-        }
-        List<Resume> list = new ArrayList<>();
-        try {
-            Files.list(directory).forEach(path -> {
-                Resume resume = getResume(path);
-                list.add(resume);
-            });
+        List<Resume> list;
+        try (Stream<Path> stream = Files.list(directory)) {
+            list = stream.map(this::getResume)
+                    .collect(Collectors.toCollection(ArrayList::new));
         } catch (IOException e) {
             throw new StorageException("IO error", directory.getFileName().toString(), e);
         }
@@ -94,8 +91,8 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
 
     @Override
     public void clear() {
-        try {
-            Files.list(directory).forEach(this::deleteResume);
+        try (Stream<Path> stream = Files.list(directory)) {
+            stream.forEach(this::deleteResume);
         } catch (IOException e) {
             throw new StorageException("Path delete error", null);
         }
@@ -103,6 +100,10 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
 
     @Override
     public int size() {
-        return directory.getNameCount();
+        try (Stream<Path> stream = Files.list(directory)) {
+            return (int) stream.count();
+        } catch (IOException e) {
+            throw new StorageException("Path delete error", null);
+        }
     }
 }
