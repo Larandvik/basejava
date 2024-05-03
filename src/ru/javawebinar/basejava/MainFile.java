@@ -36,13 +36,20 @@ public class MainFile {
         printAllFilesNames(directory);
     }
 
+    private static final StringBuilder INDENT = new StringBuilder();
+
     private static void printAllFilesNames(File dir) {
         File[] files = Objects.requireNonNull(dir.listFiles(), "file empty");
+
         for (File file : files) {
-            if (file.isDirectory()) {
+            if (file.isFile()) {
+                System.out.println(INDENT + "file: " + file.getName());
+            } else if (file.isDirectory()) {
+                System.out.println(INDENT + "dir: " + file.getName());
+                INDENT.append("   ");
                 printAllFilesNames(file);
+                INDENT.delete(INDENT.length() - 3, INDENT.length());
             }
-            System.out.println(file.getName());
         }
     }
 }
