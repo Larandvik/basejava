@@ -4,6 +4,8 @@ import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
 import ru.javawebinar.basejava.storage.serializers.StreamSerializer;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -45,7 +47,7 @@ public class PathStorage extends AbstractStorage<Path> {
     @Override
     protected Resume getResume(Path path) {
         try {
-            return serializer.doRead(Files.newInputStream(path));
+            return serializer.doRead(new BufferedInputStream(Files.newInputStream(path)));
         } catch (IOException e) {
             throw new StorageException("IO error", path.getFileName().toString(), e);
         }
@@ -54,9 +56,9 @@ public class PathStorage extends AbstractStorage<Path> {
     @Override
     protected void updateResume(Resume resume, Path path) {
         try {
-            serializer.doWrite(resume, Files.newOutputStream(path));
+            serializer.doWrite(resume, new BufferedOutputStream(Files.newOutputStream(path)));
         } catch (IOException e) {
-            throw new StorageException("IO error", resume.getUuid(), e);
+            throw new StorageException("Path write error", resume.getUuid(), e);
         }
     }
 
@@ -65,14 +67,14 @@ public class PathStorage extends AbstractStorage<Path> {
         try {
             Files.createFile(path);
         } catch (IOException e) {
-            throw new StorageException("Couldn't create file ", path.getFileName().toString());
+            throw new StorageException("Couldn't create file ", path.getFileName().toString(), e);
         }
         updateResume(resume, path);
     }
 
     @Override
     protected Path getSearchKey(String uuid) {
-        return Paths.get(directory.getFileName().toString(), uuid);
+        return directory.resolve(uuid);
     }
 
     @Override
@@ -94,7 +96,7 @@ public class PathStorage extends AbstractStorage<Path> {
         try (Stream<Path> stream = Files.list(directory)) {
             stream.forEach(this::deleteResume);
         } catch (IOException e) {
-            throw new StorageException("Path delete error", null);
+            throw new StorageException("Path delete error", e);
         }
     }
 
@@ -103,7 +105,7 @@ public class PathStorage extends AbstractStorage<Path> {
         try (Stream<Path> stream = Files.list(directory)) {
             return (int) stream.count();
         } catch (IOException e) {
-            throw new StorageException("Path delete error", null);
+            throw new StorageException("Path delete error", e);
         }
     }
 }
