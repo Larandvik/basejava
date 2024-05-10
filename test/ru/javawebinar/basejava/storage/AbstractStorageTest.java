@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public abstract class AbstractStorageTest {
 
-    protected static final File STORAGE_DIR = new File("E:\\IDEA_Project\\basejava\\storage");
+    protected static final File STORAGE_DIR = new File("E:\\IDEA_Project\\basejava\\storageTest");
 
     protected final Storage storage;
 
@@ -103,7 +103,7 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void getAll() {
-        Resume[] expected = {new Resume(UUID_1, NAME_1), new Resume(UUID_2, NAME_2), new Resume(UUID_3, NAME_3)};
+        Resume[] expected = {RESUME_1, RESUME_2, RESUME_3};
         assertArrayEquals(expected, storage.getAllSorted().toArray(new Resume[0]));
     }
 

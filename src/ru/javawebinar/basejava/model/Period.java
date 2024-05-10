@@ -1,5 +1,11 @@
 package ru.javawebinar.basejava.model;
 
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import ru.javawebinar.basejava.util.LocalDateAdapter;
+
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -9,13 +15,20 @@ import java.util.Objects;
 import static ru.javawebinar.basejava.util.DateUtil.NOW;
 import static ru.javawebinar.basejava.util.DateUtil.of;
 
+@XmlRootElement
+@XmlAccessorType (XmlAccessType.FIELD)
 public class Period implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
-    private final LocalDate startDate;
-    private final LocalDate endDate;
-    private final String title;
-    private final String description;
+    @XmlJavaTypeAdapter (LocalDateAdapter.class)
+    private LocalDate startDate;
+    @XmlJavaTypeAdapter (LocalDateAdapter.class)
+    private LocalDate endDate;
+    private String title;
+    private String description;
+
+    public Period() {
+    }
 
     public Period(int startYear, Month startMonth, String title, String description) {
         this(of(startYear, startMonth), NOW, title, description);
