@@ -28,6 +28,13 @@ public class Company implements Serializable {
         periods.add(period);
     }
 
+    public Company(String name, String website, List<Period> periods) {
+        Objects.requireNonNull(name, "name must not be null");
+        this.name = name;
+        this.website = website;
+        periods.addAll(periods);
+    }
+
     public String getName() {
         return name;
     }

@@ -8,7 +8,7 @@ public class ResumeTestData {
     private static Resume resumeTest;
 
     public static Resume getResumeTest(String uuid, String fullName) {
-        Resume resumeTest =  new Resume(uuid, fullName);
+        Resume resumeTest = new Resume(uuid, fullName);
         resumeTest.addContact(ContactType.PHONE, "+7(921) 855-0482");
         resumeTest.addContact(ContactType.SKYPE, "skype:grigory.kislin");
         resumeTest.addContact(ContactType.EMAIL, "gkislin@yandex.ru");
@@ -96,7 +96,7 @@ public class ResumeTestData {
         experience.addCompanies(Alcatel);
         resumeTest.addSection(SectionType.EXPERIENCE, experience);
 
-        Period periodItmo1 = new Period(1987, Month.SEPTEMBER,1993, Month.JUNE,
+        Period periodItmo1 = new Period(1987, Month.SEPTEMBER, 1993, Month.JUNE,
                 "Инженер (программист Fortran, C)", null);
         Period periodItmo2 = new Period(1993, Month.SEPTEMBER, 1996, Month.JULY,
                 "Аспирантура (программист С, С++)", null);
