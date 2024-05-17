@@ -24,15 +24,15 @@ public class Company implements Serializable {
     public Company(String name, String website, Period period) {
         Objects.requireNonNull(name, "name must not be null");
         this.name = name;
-        this.website = website;
+        this.website = website == null ? "" : website;
         periods.add(period);
     }
 
     public Company(String name, String website, List<Period> periods) {
         Objects.requireNonNull(name, "name must not be null");
         this.name = name;
-        this.website = website;
-        periods.addAll(periods);
+        this.website = website == null ? "" : website;
+        this.periods.addAll(periods);
     }
 
     public String getName() {

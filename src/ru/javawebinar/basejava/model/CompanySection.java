@@ -11,16 +11,15 @@ public class CompanySection extends AbstractSection {
 
     private List<Company> companies = new ArrayList<>();
 
+    public CompanySection(List<Company> companies) {
+        this.companies = companies;
+    }
+
     public CompanySection() {
     }
 
     public List<Company> getCompanies() {
         return companies;
-    }
-
-    public void setCompanies(List<Company> companies) {
-        Objects.requireNonNull(companies, "companies must not be null");
-        this.companies = companies;
     }
 
     public void addCompanies(Company company) {
