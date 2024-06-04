@@ -10,24 +10,50 @@ import java.util.List;
 
 public class SqlStorage implements Storage {
 
+    protected static final String DELETE_ALL = """
+            DELETE
+            FROM resume
+            """;
+    protected static final String UPDATE_RESUME = """
+            UPDATE resume
+            SET full_name = ?
+            WHERE uuid = ?
+            """;
+    protected static final String SAVE_RESUME = """
+            INSERT INTO resume (uuid, full_name)
+            VALUES(?,?)
+                """;
+    protected static final String GET_RESUME = """
+            SELECT *
+            FROM resume r
+            WHERE r.uuid = ?
+            """;
+    protected static final String DELETE_RESUME = """
+            DELETE
+            FROM resume
+            WHERE uuid = ?
+                                    """;
+    protected static final String GET_ALL_SORTED = """
+            SELECT *
+            FROM resume
+            ORDER BY full_name, uuid
+            """;
+    protected static final String GET_SIZE = """
+            SELECT count(uuid)
+            FROM resume
+            """;
+
     public SqlStorage() {
     }
 
     @Override
     public void clear() {
-        SqlHelper.execute("""
-                DELETE
-                FROM resume
-                """);
+        SqlHelper.execute(DELETE_ALL);
     }
 
     @Override
     public void update(Resume resume) {
-        SqlHelper.execute("""
-                        UPDATE resume
-                        SET full_name = ?
-                        WHERE uuid = ?
-                        """,
+        SqlHelper.execute(UPDATE_RESUME,
                 ps -> {
                     ps.setString(1, resume.getFullName());
                     ps.setString(2, resume.getUuid());
@@ -41,10 +67,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public void save(Resume resume) {
-        SqlHelper.<Void>execute("""
-                        INSERT INTO resume (uuid, full_name)
-                        VALUES(?,?)
-                            """,
+        SqlHelper.<Void>execute(SAVE_RESUME,
                 ps -> {
                     ps.setString(1, resume.getUuid());
                     ps.setString(2, resume.getFullName());
@@ -55,11 +78,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public Resume get(String uuid) {
-        return SqlHelper.execute("""
-                        SELECT *
-                        FROM resume r
-                        WHERE r.uuid = ?
-                        """,
+        return SqlHelper.execute(GET_RESUME,
                 ps -> {
                     ps.setString(1, uuid);
                     ResultSet rs = ps.executeQuery();
@@ -72,11 +91,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public void delete(String uuid) {
-        SqlHelper.execute("""
-                        DELETE
-                        FROM resume
-                        WHERE uuid = ?
-                                                """,
+        SqlHelper.execute(DELETE_RESUME,
                 ps -> {
                     ps.setString(1, uuid);
                     int rowCount = ps.executeUpdate();
@@ -89,11 +104,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public List<Resume> getAllSorted() {
-        return SqlHelper.execute("""
-                SELECT *
-                FROM resume
-                ORDER BY full_name, uuid
-                """, ps -> {
+        return SqlHelper.execute(GET_ALL_SORTED, ps -> {
             ResultSet rs = ps.executeQuery();
             List<Resume> resumes = new ArrayList<>();
             while (rs.next()) {
@@ -106,10 +117,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public int size() {
-        return SqlHelper.execute("""
-                SELECT count(uuid)
-                FROM resume
-                """, ps -> {
+        return SqlHelper.execute(GET_SIZE, ps -> {
                     ResultSet rs = ps.executeQuery();
                     return rs.next() ? rs.getInt("count") : 0;
                 }
