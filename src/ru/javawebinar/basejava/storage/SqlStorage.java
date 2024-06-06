@@ -5,6 +5,7 @@ import ru.javawebinar.basejava.model.ContactType;
 import ru.javawebinar.basejava.model.Resume;
 import ru.javawebinar.basejava.sql.SqlHelper;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
@@ -75,22 +76,23 @@ public class SqlStorage implements Storage {
 
     @Override
     public void save(Resume resume) {
-        SqlHelper.<Void>execute(SAVE_RESUME,
-                ps -> {
+        SqlHelper.transactionalExecute(conn -> {
+            try (PreparedStatement ps = conn.prepareStatement(SAVE_RESUME)) {
+                ps.setString(1, resume.getUuid());
+                ps.setString(2, resume.getFullName());
+                ps.execute();
+            }
+            try (PreparedStatement ps = conn.prepareStatement(SAVE_CONTACT_RESUME)) {
+                for (Map.Entry<ContactType, String> e : resume.getContacts().entrySet()) {
                     ps.setString(1, resume.getUuid());
-                    ps.setString(2, resume.getFullName());
-                    ps.execute();
-                    return null;
-                });
-        for (Map.Entry<ContactType, String> e : resume.getContacts().entrySet()) {
-            SqlHelper.<Void>execute(SAVE_CONTACT_RESUME,
-                    ps -> {
-                        ps.setString(1, resume.getUuid());
-                        ps.setString(2, e.getKey().name());
-                        ps.setString(2, e.getValue());
-                        return null;
-                    });
-        }
+                    ps.setString(2, e.getKey().name());
+                    ps.setString(2, e.getValue());
+                    ps.addBatch();
+                }
+                ps.executeBatch();
+            }
+            return null;
+        });
     }
 
     @Override
