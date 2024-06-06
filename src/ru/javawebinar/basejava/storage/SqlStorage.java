@@ -1,12 +1,14 @@
 package ru.javawebinar.basejava.storage;
 
 import ru.javawebinar.basejava.exception.NotExistStorageException;
+import ru.javawebinar.basejava.model.ContactType;
 import ru.javawebinar.basejava.model.Resume;
 import ru.javawebinar.basejava.sql.SqlHelper;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class SqlStorage implements Storage {
 
@@ -22,10 +24,16 @@ public class SqlStorage implements Storage {
     protected static final String SAVE_RESUME = """
             INSERT INTO resume (uuid, full_name)
             VALUES(?,?)
-                """;
+            """;
+    protected static final String SAVE_CONTACT_RESUME = """
+            INSERT INTO contact(resume_uuid, type, value)
+            VALUES (?,?,?)
+            """;
     protected static final String GET_RESUME = """
             SELECT *
             FROM resume r
+                LEFT JOIN contact c
+                    ON r.uuid = c.resume_uuid
             WHERE r.uuid = ?
             """;
     protected static final String DELETE_RESUME = """
@@ -74,6 +82,15 @@ public class SqlStorage implements Storage {
                     ps.execute();
                     return null;
                 });
+        for (Map.Entry<ContactType, String> e : resume.getContacts().entrySet()) {
+            SqlHelper.<Void>execute(SAVE_CONTACT_RESUME,
+                    ps -> {
+                        ps.setString(1, resume.getUuid());
+                        ps.setString(2, e.getKey().name());
+                        ps.setString(2, e.getValue());
+                        return null;
+                    });
+        }
     }
 
     @Override
@@ -85,7 +102,14 @@ public class SqlStorage implements Storage {
                     if (!rs.next()) {
                         throw new NotExistStorageException(uuid);
                     }
-                    return new Resume(uuid, rs.getString("full_name"));
+                    Resume resume = new Resume(uuid, rs.getString("full_name"));
+                    do {
+                        String value = rs.getString("value");
+                        ContactType type = ContactType.valueOf(rs.getString("type"));
+                        resume.addContact(type, value);
+                    } while (rs.next());
+
+                    return resume;
                 });
     }
 
