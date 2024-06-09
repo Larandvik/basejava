@@ -5,16 +5,16 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.exception.StorageException;
+import ru.javawebinar.basejava.model.ContactType;
 import ru.javawebinar.basejava.model.Resume;
 import ru.javawebinar.basejava.model.ResumeMapper;
 import ru.javawebinar.basejava.util.SpringJdbcConfig;
 
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
-import static ru.javawebinar.basejava.storage.SqlStorage.*;
-
-public class SpringJdbcStorage implements Storage {
+public class SpringJdbcStorage implements Storage, SqlStorageTrain {
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -43,9 +43,9 @@ public class SpringJdbcStorage implements Storage {
         } catch (DuplicateKeyException e) {
             throw new ExistStorageException(resume.getUuid());
         }
-//        for (Map.Entry<ContactType, String> entry : resume.getContacts().entrySet()) {
-//            jdbcTemplate.update(SAVE_CONTACT_RESUME, resume.getUuid(), entry.getKey().name(), entry.getValue());
-//        }
+        for (Map.Entry<ContactType, String> entry : resume.getContacts().entrySet()) {
+            jdbcTemplate.update(SAVE_CONTACT_RESUME, resume.getUuid(), entry.getKey().name(), entry.getValue());
+        }
     }
 
     @Override

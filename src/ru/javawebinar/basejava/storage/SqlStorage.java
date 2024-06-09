@@ -11,53 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class SqlStorage implements Storage {
+public class SqlStorage implements Storage, SqlStorageTrain {
 
-    protected static final String DELETE_ALL = """
-            DELETE
-            FROM resume;
-            """;
-    protected static final String UPDATE_RESUME = """
-            UPDATE resume
-            SET full_name = ?
-            WHERE uuid = ?;
-            """;
-    protected static final String UPDATE_CONTACT_RESUME = """
-            UPDATE contact
-            SET value = ?
-            WHERE resume_uuid = ? AND type = ?;
-            """;
 
-    protected static final String SAVE_RESUME = """
-            INSERT INTO resume (uuid, full_name)
-            VALUES(?,?);
-            """;
-    protected static final String SAVE_CONTACT_RESUME = """
-            INSERT INTO contact(resume_uuid, type, value)
-            VALUES (?,?,?);
-            """;
-    protected static final String GET_RESUME = """
-            SELECT *
-            FROM resume r
-                LEFT JOIN contact c
-                  ON r.uuid = c.resume_uuid
-            WHERE r.uuid = ?;
-            """;
-
-    protected static final String DELETE_RESUME = """
-            DELETE
-            FROM resume
-            WHERE uuid = ?;
-            """;
-    protected static final String GET_ALL_SORTED = """
-            SELECT *
-            FROM resume
-            ORDER BY full_name, uuid
-            """;
-    protected static final String GET_SIZE = """
-            SELECT count(uuid)
-            FROM resume
-            """;
 
     public SqlStorage() {
     }
