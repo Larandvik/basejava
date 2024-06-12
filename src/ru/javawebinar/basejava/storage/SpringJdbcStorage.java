@@ -4,15 +4,15 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
-import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.ContactType;
 import ru.javawebinar.basejava.model.Resume;
-import ru.javawebinar.basejava.model.ResumeMapper;
+import ru.javawebinar.basejava.sql.ResumeExtractor;
 import ru.javawebinar.basejava.util.SpringJdbcConfig;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
+import java.util.Objects;
 
 public class SpringJdbcStorage implements Storage, SqlStorageTrain {
 
@@ -34,6 +34,8 @@ public class SpringJdbcStorage implements Storage, SqlStorageTrain {
         if (update == 0) {
             throw new NotExistStorageException(resume.getUuid());
         }
+        deleteContacts(resume);
+        insertContact(resume);
     }
 
     @Override
@@ -43,17 +45,15 @@ public class SpringJdbcStorage implements Storage, SqlStorageTrain {
         } catch (DuplicateKeyException e) {
             throw new ExistStorageException(resume.getUuid());
         }
-        for (Map.Entry<ContactType, String> entry : resume.getContacts().entrySet()) {
-            jdbcTemplate.update(SAVE_CONTACT_RESUME, resume.getUuid(), entry.getKey().name(), entry.getValue());
-        }
+        insertContact(resume);
     }
 
     @Override
     public Resume get(String uuid) {
-        return jdbcTemplate.query(GET_RESUME, new ResumeMapper(), new Object[]{uuid})
+        return Objects.requireNonNull(jdbcTemplate.query(GET_RESUME, new ResumeExtractor(), uuid))
                 .stream()
                 .findAny()
-                .orElseThrow((Supplier<StorageException>) () -> new NotExistStorageException(uuid));
+                .orElseThrow(() -> new NotExistStorageException(uuid));
     }
 
     @Override
@@ -66,12 +66,24 @@ public class SpringJdbcStorage implements Storage, SqlStorageTrain {
 
     @Override
     public List<Resume> getAllSorted() {
-        return jdbcTemplate.query(GET_ALL_SORTED, new ResumeMapper());
+        return jdbcTemplate.query(GET_ALL_SORTED, new ResumeExtractor());
     }
 
     @Override
     public int size() {
         Integer i = jdbcTemplate.queryForObject(GET_SIZE, Integer.class);
         return i == null ? 0 : i;
+    }
+
+    private void insertContact(Resume resume) {
+        List<Object[]> batchArgs = new ArrayList<>();
+        for (Map.Entry<ContactType, String> ct : resume.getContacts().entrySet()) {
+            batchArgs.add(new Object[]{resume.getUuid(), ct.getKey().name(), ct.getValue()});
+        }
+        jdbcTemplate.batchUpdate(SAVE_CONTACT_RESUME, batchArgs);
+    }
+
+    private void deleteContacts(Resume resume) {
+        jdbcTemplate.update(DELETE_CONTACT_RESUME, resume.getUuid());
     }
 }

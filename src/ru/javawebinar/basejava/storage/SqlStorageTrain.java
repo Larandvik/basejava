@@ -3,7 +3,8 @@ package ru.javawebinar.basejava.storage;
 public interface SqlStorageTrain {
     String DELETE_ALL = """
             DELETE
-            FROM resume;
+            FROM resume
+            WHERE TRUE;
             """;
 
     String UPDATE_RESUME = """
@@ -12,10 +13,10 @@ public interface SqlStorageTrain {
             WHERE uuid = ?;
             """;
 
-    String UPDATE_CONTACT_RESUME = """
-            UPDATE contact
-            SET value = ?
-            WHERE resume_uuid = ? AND type = ?;
+    String DELETE_CONTACT_RESUME = """
+            DELETE
+            FROM contact
+            WHERE resume_uuid = ?
             """;
 
     String SAVE_RESUME = """
@@ -44,7 +45,8 @@ public interface SqlStorageTrain {
 
     String GET_ALL_SORTED = """
             SELECT *
-            FROM resume
+            FROM resume r
+            LEFT JOIN contact c ON r.uuid = c.resume_uuid
             ORDER BY full_name, uuid
             """;
 

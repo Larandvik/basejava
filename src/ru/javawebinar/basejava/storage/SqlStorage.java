@@ -5,15 +5,16 @@ import ru.javawebinar.basejava.model.ContactType;
 import ru.javawebinar.basejava.model.Resume;
 import ru.javawebinar.basejava.sql.SqlHelper;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 public class SqlStorage implements Storage, SqlStorageTrain {
-
-
 
     public SqlStorage() {
     }
@@ -34,15 +35,8 @@ public class SqlStorage implements Storage, SqlStorageTrain {
                     throw new NotExistStorageException(resume.getUuid());
                 }
             }
-            try (PreparedStatement ps = conn.prepareStatement(UPDATE_CONTACT_RESUME)) {
-                for (Map.Entry<ContactType, String> e : resume.getContacts().entrySet()) {
-                    ps.setString(2, resume.getUuid());
-                    ps.setString(3, e.getKey().name());
-                    ps.setString(1, e.getValue());
-                    ps.addBatch();
-                }
-                ps.executeBatch();
-            }
+            deleteContacts(resume);
+            insertContact(conn, resume);
             return null;
         });
     }
@@ -55,17 +49,7 @@ public class SqlStorage implements Storage, SqlStorageTrain {
                 ps.setString(2, resume.getFullName());
                 ps.execute();
             }
-            try (PreparedStatement ps = conn.prepareStatement(SAVE_CONTACT_RESUME)) {
-                for (Map.Entry<ContactType, String> e : resume.getContacts().entrySet()) {
-
-
-                    ps.setString(1, resume.getUuid());
-                    ps.setString(2, e.getKey().name());
-                    ps.setString(3, e.getValue());
-                    ps.addBatch();
-                }
-                ps.executeBatch();
-            }
+            insertContact(conn, resume);
             return null;
         });
     }
@@ -81,9 +65,7 @@ public class SqlStorage implements Storage, SqlStorageTrain {
                     }
                     Resume resume = new Resume(uuid, rs.getString("full_name"));
                     do {
-                        String value = rs.getString("value");
-                        ContactType type = ContactType.valueOf(rs.getString("type"));
-                        resume.addContact(type, value);
+                        addContact(rs, resume);
                     } while (rs.next());
 
                     return resume;
@@ -107,12 +89,17 @@ public class SqlStorage implements Storage, SqlStorageTrain {
     public List<Resume> getAllSorted() {
         return SqlHelper.execute(GET_ALL_SORTED, ps -> {
             ResultSet rs = ps.executeQuery();
-            List<Resume> resumes = new ArrayList<>();
+            Map<String, Resume> map = new LinkedHashMap<>();
             while (rs.next()) {
-                Resume r = new Resume(rs.getString("uuid"), rs.getString("full_name"));
-                resumes.add(r);
+                String uuid = rs.getString("uuid");
+                Resume resume = map.get(uuid);
+                if (resume == null) {
+                    resume = new Resume(uuid, rs.getString("full_name"));
+                    map.put(uuid, resume);
+                }
+                addContact(rs, resume);
             }
-            return resumes;
+            return new ArrayList<>(map.values());
         });
     }
 
@@ -123,5 +110,32 @@ public class SqlStorage implements Storage, SqlStorageTrain {
                     return rs.next() ? rs.getInt("count") : 0;
                 }
         );
+    }
+
+    private void insertContact(Connection conn, Resume r) throws SQLException {
+        try (PreparedStatement ps = conn.prepareStatement(SAVE_CONTACT_RESUME)) {
+            for (Map.Entry<ContactType, String> e : r.getContacts().entrySet()) {
+                ps.setString(1, r.getUuid());
+                ps.setString(2, e.getKey().name());
+                ps.setString(3, e.getValue());
+                ps.addBatch();
+            }
+            ps.executeBatch();
+        }
+    }
+
+    private void deleteContacts(Resume r) {
+        SqlHelper.execute(DELETE_CONTACT_RESUME, ps -> {
+            ps.setString(1, r.getUuid());
+            ps.execute();
+            return null;
+        });
+    }
+
+    private void addContact(ResultSet rs, Resume resume) throws SQLException {
+        String value = rs.getString("value");
+        if (value != null) {
+            resume.addContact(ContactType.valueOf(rs.getString("type")), value);
+        }
     }
 }
