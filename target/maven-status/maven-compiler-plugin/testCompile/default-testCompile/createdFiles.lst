@@ -1,0 +1,15 @@
+ru\javawebinar\basejava\storage\AbstractArrayStorageTest.class
+ru\javawebinar\basejava\storage\AbstractStorageTest.class
+ru\javawebinar\basejava\storage\JsonPathStorageTest.class
+ru\javawebinar\basejava\storage\ObjectStreamFileStorageTest.class
+ru\javawebinar\basejava\storage\ListStorageTest.class
+ru\javawebinar\basejava\storage\SpringJdbcStorageTest.class
+ru\javawebinar\basejava\storage\ObjectStreamPathStorageTest.class
+ru\javawebinar\basejava\storage\DataPathStorageTest.class
+ru\javawebinar\basejava\storage\AllStorageTest.class
+ru\javawebinar\basejava\storage\MapUuidStorageTest.class
+ru\javawebinar\basejava\storage\ArrayStorageTest.class
+ru\javawebinar\basejava\storage\XmlPathStorageTest.class
+ru\javawebinar\basejava\storage\MapResumeStorageTest.class
+ru\javawebinar\basejava\storage\SortedArrayStorageTest.class
+ru\javawebinar\basejava\storage\SqlStorageTest.class
